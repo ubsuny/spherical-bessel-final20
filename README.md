@@ -1,1 +1,3 @@
-# spherical-bessel-final20
+# Compute the Eigenfrequencies of a spherical electromagnetic cavity
+
+Your Writeup goes here
