@@ -1,0 +1,74 @@
+\usepackage{amsmath, amsthm, amssymb, amsfonts, IEEEtrantools, graphicx, multicol, caption, float, fancyhdr, lastpage, wrapfig, titlesec, authblk, subcaption, multirow, physics,stackengine,tensor}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage[makeroom]{cancel}
+\setlength{\arrayrulewidth}{.5mm}
+\setlength\parindent{0pt}
+%\graphicspath{ {Figures/} }
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+%\numberwithin{table}{section}
+%\setcounter{section}{11}
+\usepackage[letterpaper, total={6.5in, 7.5in}]{geometry}
+\usepackage[backend=biber,style=alphabetic, sorting=nyt]{biblatex}
+\addbibresource{Sources.bib}
+
+
+%Give PDF Links
+%______________________________________________________________________
+\usepackage[bookmarks]{hyperref}
+%\texorpdfstring{TEX text}{Bookmark Text}
+%\href{url}{text}
+\hypersetup{colorlinks=false}
+%______________________________________________________________________
+
+%Custom Math Commands
+%______________________________________________________________________
+%Looks
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\mb}[1]{\mathbb{#1}}
+\newcommand{\hlw}[1]{\hspace{#1\linewidth}}
+
+%Equations
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\eqb}[1]{\begin{equation}\boxed{#1}\end{equation}}
+\newcommand{\eqq}[1]{\begin{equation*}#1\end{equation*}}
+\newcommand{\eqqb}[1]{\begin{equation*}\boxed{#1}\end{equation*}}
+\newcommand{\ea}[1]{\begin{align}#1\end{align}}
+\newcommand{\eaa}[1]{\begin{align*}#1\end{align*}}
+%______________________________________________________________________
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Eigenfrequencies of a Spherical Electromagnetic Cavity}
+\rhead{Alexander Bivolcic}
+\rfoot{Page \thepage \hspace{3pt} of \pageref{LastPage}}
+
+%\makeatletter
+%\@addtoreset{section}{part}
+%\makeatother
+\renewcommand\thepart{\arabic{part}}
+
+\titleformat
+ {\section}
+ {\centering\color{PineGreen} \bfseries\Large}
+ {\textcolor{PineGreen}{\thesection{}.}}
+ {4pt}
+ {}
+ [\textcolor{PineGreen}{\rule{\textwidth}{0.3pt}}]
+\renewcommand\thesection{\Roman{section}}
+
+\titleformat
+ {\subsection}
+ {\centering\color{PineGreen} \bfseries\large}
+ {\textcolor{PineGreen}{\thesubsection{}:}}
+ {4pt}
+ {}
+\renewcommand\thesubsection{\Alph{subsection}} 
+
+\titleformat
+ {\subsubsection}
+ {\centering\color{PineGreen} \itshape}
+ {\textcolor{PineGreen}{\thesubsubsection{}:}}
+ {4pt}
+ {}
+\renewcommand\thesubsubsection{\arabic{subsubsection}}
