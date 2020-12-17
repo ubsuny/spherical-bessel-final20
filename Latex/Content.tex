@@ -51,6 +51,12 @@ Most readers will be familiar with the form of cylindrical Bessel functions as t
 j_l(x) &= (-1)^l \qty(\dv{x})^l\frac{\sin(x)}{x}\\
 n_l(x) &= (-1)^l+1 \qty(\dv{x})^l\frac{\cos(x)}{x}\\
 }
+\begin{figure}
+    \centering
+    \includegraphics[width=.8\linewidth]{Bessel.png}
+    \caption{Spherical Bessel functions of various order}
+    \label{fig:bessel}
+\end{figure}
 While we could go down an endless rabbit hole when it comes to Bessel functions, I believe this will be enough for the problem at hand.
 
 We're most interested in finding the Eigenfrequencies of the spherical cavity. To do so we look back at the boundary condition $\vu{r}\cross \va{E}\big{|}_s=0$. When applied to equations \eqref{eq:wave1} and \eqref{eq:wave2} this means that the angular comonents of those waves must be zero for any value all values of $\theta$ and $\phi$ when $r=R$ (the outer radius of the vanity). The only way to do so is to set either the Bessel function of the derivative of the Bessel function to zero at the walls.
@@ -67,13 +73,49 @@ This allows us to write down the Eigenfrequencies in terms of the zeros of the b
 \eqb{
 \omega = x_{n,l}\frac{c}{R}
 }
-The zeros have multiple frequencies as the zeros of the $l$ bessel function are not the same as the zeros of the $l+1$ function. Moroever, due to the periodic nature of $\sin$ and $\cos$ each order of Bessel function has many zeros.
+The zeros have multiple frequencies as the zeros of the $l$ bessel function are not the same as the zeros of the $l+1$ function. Moreover, due to the periodic nature of $\sin$ and $\cos$ each order of Bessel function has many zeros.
 
 At this point it is clear that our goal is calculate the zeros of the various Bessel functions. Doing so by hand is rather straight forward, but it takes time, especially for higher order Bessel functions. Since these functions have been around for so long most people consult a table of zeros when they are needed. In our case
 
 \section{Computational Solutions}
 %Be sure to mention what you are using and why
-Here is some stuff
+During lecture we looked at multiple methods for root finding numerically. These methods have a direct parallel to a sort of graphical search in that they were easy to animate. Specifically we looked at four methods:
+\begin{enumerate}
+    \item Simple Search: Where we took a midpoint of a specific range and cut the step size in half each iteration
+    \item Bisection: This method utilizes the intermediate value theorem to find one root in a given interval
+    \item Secant Line: Draws a line connecting two points and uses the intersection at zero to start the next integration.
+    \item Utilizes the derivative of the function to draw a tangent line to begin next iteration.
+\end{enumerate}
+Since our Bessel functions are analytic the tangent method should be the most efficient. The scipy library holds Bessel functions and derivatives of Bessel functions for integer and half integer values. I used that alon with the algorithms mentioned in class to design my implementation.
 
+Comparing these methods proved that assumption correct. We were also able to animate the search to more intuitively see how accurate they were. In general, even the simple search eventually hit the desired accuracy of $\pm 1\cross 10^{-6}$ within the max iterations.
+\begin{figure}
+    \centering
+    \includegraphics[width=.7\linewidth]{simple.png}
+    \caption{The final plot of the simple search's attempt to find a zero of a Bessel function of the first kind}
+    \label{fig:simple}
+\end{figure}
+
+While the animations may look nice I have a larger issue at hand. There are different algorithms in existence that can calculate the zeros of spherical Bessel functions quite exactly using the relation to cylindrical Bessel functions. In particular I think of the \href{https://scipy-cookbook.readthedocs.io/items/SphericalBesselZeros.html}{provided link} as my direct competition. This method also makes use of an algorithm that is able to use the previous zero to calculate the next one. Ideally I would like to be able to do something that these methods can't do.
+
+These methods do have one fatal flaw, they require you to calculate every zero previous to the one that you are looking for. Since our method is more \emph{graphical} than a series, I do not have the same restraint. The hard part I need to overcome is I need a way to estimate a start point for my tangent search. 
+
+If we ignore the area right around zero (\emph{I'll never beat the other algorithms at that small of a value of x anyway}) a spherical Bessel function of order 0 behaves like a $\sin$ function of decreasing amplitude.
+\eq{
+j_0 = \frac{\sin(x)}{x}
+}
+The zeros of a sin function are integer values of $\pi$ so I am already able to know exactly where these zeros are. Now if we look at a Bessel function of order 1 we essentially just subtract $\cos$.
+\eq{
+j_1 = \frac{1}{x}(\frac{\sin(x)}{x} - \cos(x))
+}
+Once again it is pretty easy to guess these roots, they occur at $z\pi-\frac{\pi}{2}$. At the risk of being too general I thought I could generalize this process. For a Bessel function of order $l$ the n-th zero should occur at:
+\eqb{
+\text{Estimated Zero } = (n+1)\pi-\frac{l\pi}{2}
+}
+Armed with this knowledge I might actually stand a chance against those other algorithms for higher values of $x$, which is the same as saying higher Eigenfrequencies. Testing this out when beautifully even at order 16 we were able to calculate the 30th root with only 7 iterations.\\
+\\
+Thus I believe I can make the following conclusion. Whilst it is more accurate to analytically calculate or use the series method \href{https://scipy-cookbook.readthedocs.io/items/SphericalBesselZeros.html}{outlined here} to calculate the zeros of spherical Bessel functions. Our iteration excels at higher orders and highers Eigenfrequencies. 
 
 \section{Applications and Current Research}
+
+Whilst I was searching for information on resonant cavities I came across some interesting research currently happening with regards to this topic. First I found \cite{research1} which used radial basis functions to solve the Helmholtz equation in rectangular coordinates as opposed to spherical ones. While I did not completely understand the math, the paper did have a very interesting visualization of the normal modes inside the chamber. I also found \cite{research2} which technically used an overall cylindrical geometry, however it did make use of perturbation theory which I found to be interesting.
